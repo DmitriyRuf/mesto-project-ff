@@ -50,7 +50,7 @@ function fillProfileModal(source, target){
 
 /**Событие открытия формы изображения*/
 function handleOpenImage(cardData) {
-  fillImageModal(cardData, popupOpenImage);
+  fillImageModal(cardData);
   openModal(popupOpenImage);
 }
 /**Событие открытия формы профайла*/
