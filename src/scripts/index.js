@@ -2,7 +2,7 @@
 import "../pages/index.css";
 import { initialCards } from "./cards.js";
 import { createCard, deleteCard, setLike } from "./components/card.js";
-import {openModal,closeModal,fillImageModal,fillProfileModal} from "./components/modal.js";
+import {openModal,closeModal } from "./components/modal.js";
 
 /**Темплейт карточки*/
 const cardTemplate = document.querySelector("#card-template").content;
@@ -29,10 +29,28 @@ const popupAddCardCloseButton = popupAddCard.querySelector(".popup__close");
 const popupProfileCloseButton = popupProfile.querySelector(".popup__close");
 const popupOpenImageCloseButton = popupOpenImage.querySelector(".popup__close");
 
+/**Функция меппинга данных между карточкой и модальным окном картинки*/
+function fillImageModal(cardData){
+  const popupImage = popupOpenImage.querySelector(".popup__image");
+  const popupCaption = popupOpenImage.querySelector(".popup__caption");
+  popupImage.src = cardData.link;
+  popupImage.alt = cardData.name;
+  popupCaption.textContent = cardData.name;
+};
+/**Функция меппинга данных между профайлом и модальным окном профайла*/
+function fillProfileModal(source, target){
+  if (source.classList.contains("profile__info") && target.classList.contains("popup_type_edit")){
+  const profileTitle = source.querySelector(".profile__title");
+  const profileDescription = source.querySelector(".profile__description");
+  const profileForm = target.querySelector(".popup__form");
+  profileForm.elements.name.value = profileTitle.textContent;
+  profileForm.elements.description.value = profileDescription.textContent;
+  }
+};
+
 /**Событие открытия формы изображения*/
-function handleOpenImage(evt) {
-  const cardItem = evt.target.closest(".places__item");
-  fillImageModal(cardItem, popupOpenImage);
+function handleOpenImage(cardData) {
+  fillImageModal(cardData, popupOpenImage);
   openModal(popupOpenImage);
 }
 /**Событие открытия формы профайла*/
@@ -72,7 +90,7 @@ function handleFormAddCardSubmit(evt) {
 /**Создание новой карточки на основе введенных данных формы*/
   const cardName = formAddCard.querySelector(".popup__input_type_card-name");
   const cardUrl = formAddCard.querySelector(".popup__input_type_url");
-  const cardData = {name: cardName.value,link: cardUrl.value,};
+  const cardData = {name: cardName.value,link: cardUrl.value};
   const cardItem = createCard(cardTemplate,cardData,deleteCard,handleOpenImage,setLike);
 /**Добавление новой карточки в начало списка*/
   cardsContainer.prepend(cardItem);

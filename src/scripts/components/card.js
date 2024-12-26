@@ -12,9 +12,9 @@ function createCard(cardTemplate, cardData, deleteCardEvent, openImageEvent, set
     /**Заполнение заголовка для карточки*/
     cardtitle.textContent = cardData.name;
     /**Определение функции для иконки удаления*/
-    cardDeleteButton.addEventListener("click", deleteCardEvent);
+    cardDeleteButton.addEventListener("click", () => deleteCardEvent(cardItem));
     /**Определение функции для открытия картинки*/
-    cardImage.addEventListener("click", openImageEvent);
+    cardImage.addEventListener("click", () => openImageEvent(cardData));
     /**Определение функции лайка*/
     cardLikeButton.addEventListener("click", setLikeEvent);
     /**Возвращение заполненной карточки*/
@@ -22,8 +22,7 @@ function createCard(cardTemplate, cardData, deleteCardEvent, openImageEvent, set
   };
   
   /**Функция удаления карточки*/
-  function deleteCard(event) {
-    const cardItem = event.target.closest(".places__item"); 
+  function deleteCard(cardItem) {
     cardItem.remove();
   };
   /**Функция установки/удаления лайка*/
