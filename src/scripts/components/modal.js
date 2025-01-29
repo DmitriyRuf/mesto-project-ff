@@ -12,7 +12,7 @@ function handleOverlyClosePopup(evt) {
     if (evt.target.classList.contains("popup_is-opened")){
         closeModal(evt.target);
     }
-}
+};
 /**Функция открытия модального окна*/
 function openModal(modalWindow){
     /**добавление класса анимации для плавного открытия*/
@@ -20,7 +20,7 @@ function openModal(modalWindow){
     /**регистрация событий для закрытия формы*/
     document.body.addEventListener("keydown", keyHandler);
     modalWindow.addEventListener("click", handleOverlyClosePopup);
-}
+};
 /**Функция закрытия модального окна*/
 function closeModal(modalWindow){
     /**удаление класса анимации для плавного закрытия*/
@@ -28,7 +28,7 @@ function closeModal(modalWindow){
     /**регистрация событий для закрытия формы*/
     document.body.removeEventListener('keydown', keyHandler);
     modalWindow.removeEventListener("click", handleOverlyClosePopup);
-}
+};
 
 /**Список объектов для экспорта*/
 export { openModal, closeModal };
