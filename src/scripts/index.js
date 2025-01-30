@@ -2,8 +2,8 @@
 import "../pages/index.css";
 import { createCard, deleteCard, setLike } from "./components/card.js";
 import { openModal,closeModal } from "./components/modal.js";
-import { validationConfig, enableValidation, clearValidation } from "./components/validation.js";
-import { getInitialProfile, getInitialCards, updateProfile, updateAvatar, newCard, removeCard, newtLike, removeLike} from "./components/api.js";
+import { validationConfig, enableValidation, clearValidation } from "./validation/validation.js";
+import { getInitialProfile, getInitialCards, updateProfile, updateAvatar, newCard, removeCard, newtLike, removeLike} from "./api/api.js";
 
 /**Темплейт карточки*/
 const cardTemplate = document.querySelector("#card-template").content;
@@ -301,9 +301,8 @@ enableValidation(validationConfig);
 const initialsAPI = [getInitialProfile(), getInitialCards()];
 /**выполняем начальные запросы API*/
 Promise.all(initialsAPI)
-  .then((results) => {
-    fillProfileAPI(results[0], profileInfoContainer);
-    const initialCards = results[1];
+  .then(([profileInfo, initialCards]) => {
+    fillProfileAPI(profileInfo, profileInfoContainer);
     initialCards.forEach(function (cardData) {
       const cardItem = createCard(cardTemplate,cardData,currentProfile,handleOpenDeleteCardsConfirmPopup,handleOpenImage,handleSetLike);
       cardsContainer.append(cardItem);
@@ -312,4 +311,3 @@ Promise.all(initialsAPI)
   .catch((error) => {
     console.log(error);
   }); 
-
