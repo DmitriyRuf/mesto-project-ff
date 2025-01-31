@@ -5,44 +5,37 @@ const config = {
   authorization: '8fb61c75-604e-4d96-aba9-a3e69ed9080c',
   'Content-Type': 'application/json'
   }
-}
+};
+/**Обработка ответа API*/
+function handleResponse(response, message){
+  return response.json( ).then( json => {
+    if (response.ok){
+      return json;
+    }
+    return Promise.reject(`${message} Ошибка: ${response.status}`);
+  })  
+  .then((result) => {
+    return result;
+  })
+  .catch((err) => {
+    return Promise.reject(err);
+  });
+};
 
 /**Получить профайл*/
 const getInitialProfile = () => { 
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers
   })
-  .then(res => {
-    if (res.ok){
-      return res.json( );
-    }
-    return Promise.reject(`Запрос профайла не выполнен. Ошибка: ${res.status}`);
-  })
-  .then((result) => {
-    return result;
-  })
-  .catch((err) => {
-    console.log(err);
-  }); 
+  .then(res => handleResponse(res,'Запрос профайла не выполнен.')); 
 };
 
 /**Получить карточки*/
 const getInitialCards = () => { 
-  return fetch(`${config.baseUrl}/cards`, {
+ return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers
   })
-  .then(res => {
-    if (res.ok){
-      return res.json( );
-    }
-    return Promise.reject(`Запрос карточек не выполнен. Ошибка: ${res.status}`);
-  })
-  .then((result) => {
-    return result;
-  })
-  .catch((err) => {
-    console.log(err);
-  }); 
+  .then(res => handleResponse(res,'Запрос карточек не выполнен.')); 
 };
 
   /**Редактировать профиль*/
@@ -55,18 +48,7 @@ const updateProfile = (newName, newAbout) => {
       about: newAbout
     })
   })
-  .then(res => {
-    if (res.ok){
-      return res.json( );
-    }
-    return Promise.reject(`Изменение профиля не выполнено. Ошибка: ${res.status}`);
-  })
-  .then((result) => {
-    return result;
-  })
-  .catch((err) => {
-    return Promise.reject(err);
-  }); 
+  .then(res => handleResponse(res,'Изменение профиля не выполнено.')); 
 };
 
 /**Редактировать аватар*/
@@ -78,18 +60,7 @@ const updateAvatar = (newAvatar) => {
       avatar: newAvatar
     })
   })
-  .then(res => {
-    if (res.ok){
-      return res.json( );
-    }
-    return Promise.reject(`Изменение аватара не выполнено. Ошибка: ${res.status}`);
-  })
-  .then((result) => {
-    return result;
-  })
-  .catch((err) => {
-    return Promise.reject(err);
-  }); 
+  .then(res => handleResponse(res,'Изменение аватара не выполнено.'));
 };
 
 /**Добавить карточку*/
@@ -102,18 +73,7 @@ const newCard = (cardData) => {
       link: cardData.link
     })
   })
-  .then(res => {
-    if (res.ok){
-      return res.json( );
-    }
-    return Promise.reject(`Добавление карточки не выполнено. Ошибка: ${res.status}`);
-  })
-  .then((result) => {
-    return result;
-  })
-  .catch((err) => {
-    return Promise.reject(err);
-  }); 
+  .then(res => handleResponse(res,'Добавление карточки не выполнено.'));
 };
 
 /**Удалить карточку*/
@@ -122,18 +82,7 @@ const removeCard = (deleteId) => {
     method: 'DELETE',
     headers: config.headers
   })
-  .then(res => {
-    if (res.ok){
-      return res.json( );
-    }
-    return Promise.reject(`Удаление карточки не выполнено. Ошибка: ${res.status}`);
-  })
-  .then((result) => {
-    return result;
-  })
-  .catch((err) => {
-    return Promise.reject(err);
-  }); 
+  .then(res => handleResponse(res,'Удаление карточки не выполнено.'));
 };
 
 /**Поставить лайк на карточке*/
@@ -142,18 +91,7 @@ const newtLike = (cardId) => {
     method: 'PUT',
     headers: config.headers
   })
-  .then(res => {
-    if (res.ok){
-      return res.json( );
-    }
-    return Promise.reject(`Не удалось поставить лайк. Ошибка: ${res.status}`);
-  })
-  .then((result) => {
-    return result;
-  })
-  .catch((err) => {
-    return Promise.reject(err);
-  }); 
+  .then(res => handleResponse(res,'Не удалось поставить лайк.'));
 };
 
 /**Убрать лайк на карточке*/
@@ -162,18 +100,7 @@ const removeLike = (cardId) => {
     method: 'DELETE',
     headers: config.headers
   })
-  .then(res => {
-    if (res.ok){
-      return res.json( );
-    }
-    return Promise.reject(`Не удалось убрать лайк. Ошибка: ${res.status}`);
-  })
-  .then((result) => {
-    return result;
-  })
-  .catch((err) => {
-    return Promise.reject(err);
-  }); 
+  .then(res => handleResponse(res,'Не удалось убрать лайк.'));
 }
 
 /**Список объектов для экспорта*/

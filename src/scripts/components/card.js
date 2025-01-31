@@ -5,7 +5,6 @@ function createCard(cardTemplate, cardData, profileData, deleteCardEvent, openIm
     const cardImage = cardItem.querySelector(".card__image");
     const cardtitle = cardItem.querySelector(".card__title");
     const cardLikeButton = cardItem.querySelector(".card__like-button");
-    const cardLikeCount = cardItem.querySelector(".card__like-count");
     const cardDeleteButton = cardItem.querySelector(".card__delete-button");
     /**Заполнение Id карточки*/
     cardItem.id = cardData._id;
@@ -39,12 +38,7 @@ function createCard(cardTemplate, cardData, profileData, deleteCardEvent, openIm
     const cardLikeButton = cardItem.querySelector(".card__like-button");
     const cardLikeCount = cardItem.querySelector(".card__like-count");
     cardLikeCount.textContent = cardData.likes.length;
-    const myLike = cardData.likes.filter(i => i._id === profileData._id );
-    if ( myLike.length > 0 ){
-      cardLikeButton.classList.add("card__like-button_is-active");
-    } else {
-      cardLikeButton.classList.remove("card__like-button_is-active");
-    };
+    cardLikeButton.classList.toggle("card__like-button_is-active", cardData.likes.some(i => i._id === profileData._id));
   };
 
   /**Список объектов для экспорта*/

@@ -1,14 +1,3 @@
-/**Объект с настройками валидации*/
-const validationConfig = {
-  formSelector: ".popup__form",
-  inputSelector: ".popup__input",
-  submitButtonSelector: ".popup__button",
-  errorApiClass: ".query-api-error",
-  inactiveButtonClass: "popup__button_disabled",
-  inputErrorClass: "popup__input_type_error",
-  errorClass: "popup__error_visible"
-};
-
 /**Функция отображения валидации элемента формы*/
 function showInputError(formElement, inputElement, errorMessage, validConfig){
   // Находим элемент ошибки внутри самой функции
@@ -82,7 +71,7 @@ function setEventListeners(formElement, validConfig) {
   // Находим все поля внутри формы
   const inputList = Array.from(formElement.querySelectorAll(validConfig.inputSelector));
   const buttonElement = formElement.querySelector(validConfig.submitButtonSelector);
-  const ApiErrorElement = formElement.querySelector(validConfig.errorApiClass);
+  const apiErrorElement = formElement.querySelector(validConfig.errorApiClass);
   toggleButtonState(inputList, buttonElement, validConfig);
   // Обойдём все элементы полученной коллекции
   inputList.forEach((inputElement) => {
@@ -91,8 +80,8 @@ function setEventListeners(formElement, validConfig) {
       // Внутри колбэка вызовем isValid,
       isValid(formElement, inputElement, validConfig);
       toggleButtonState(inputList, buttonElement, validConfig);
-      ApiErrorElement.classList.remove(validConfig.errorClass);
-      ApiErrorElement.textContent = "";
+      apiErrorElement.classList.remove(validConfig.errorClass);
+      apiErrorElement.textContent = "";
     });
   });
 };
@@ -104,10 +93,8 @@ function enableValidation(validConfig) {
     document.querySelectorAll(validConfig.formSelector)
   );
   formList.forEach((formElement) => {
-    formList.forEach((formElement) => {
-      // Для каждой формы вызовем функцию setEventListeners
-      setEventListeners(formElement, validConfig);
-    });
+    // Для каждой формы вызовем функцию setEventListeners
+    setEventListeners(formElement, validConfig);
   });
 };
 
@@ -116,7 +103,7 @@ function clearValidation(formElement, validConfig) {
    // Находим все поля внутри формы
   const inputList = Array.from(formElement.querySelectorAll(validConfig.inputSelector));
   const buttonElement = formElement.querySelector(validConfig.submitButtonSelector);
-  const ApiErrorElement = formElement.querySelector(validConfig.errorApiClass);
+  const apiErrorElement = formElement.querySelector(validConfig.errorApiClass);
   // каждое поле и ошибки к нему очищаем
   inputList.forEach((inputElement) => {
     hideInputError(formElement, inputElement, validConfig);
@@ -124,9 +111,9 @@ function clearValidation(formElement, validConfig) {
     // сделть кнопку неактивной
     setInactiveButtonState(buttonElement, validConfig);
     // скрываем элемент ошибки API запроса
-    ApiErrorElement.classList.remove(validConfig.errorClass);
-    ApiErrorElement.textContent = "";
+    apiErrorElement.classList.remove(validConfig.errorClass);
+    apiErrorElement.textContent = "";
 };
 
 /**Список объектов для экспорта*/
-export { validationConfig, enableValidation, clearValidation };
+export { enableValidation, clearValidation };

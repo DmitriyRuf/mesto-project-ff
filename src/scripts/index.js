@@ -2,7 +2,8 @@
 import "../pages/index.css";
 import { createCard, deleteCard, setLike } from "./components/card.js";
 import { openModal,closeModal } from "./components/modal.js";
-import { validationConfig, enableValidation, clearValidation } from "./validation/validation.js";
+import { enableValidation, clearValidation } from "./validations/validation.js";
+import { validationConfig } from "./configurations/configuration.js";
 import { getInitialProfile, getInitialCards, updateProfile, updateAvatar, newCard, removeCard, newtLike, removeLike} from "./api/api.js";
 
 /**Темплейт карточки*/
@@ -44,14 +45,14 @@ const popupDeleteCardsConfirmCloseButton = popupDeleteCardsConfirm.querySelector
 
 /**Функции вывода ошибок API*/
 function hideApiError(formElemet){
-  const ApiErrorElement = formElemet.querySelector(validationConfig.errorApiClass);
-  ApiErrorElement.classList.remove(validationConfig.errorClass);
-  ApiErrorElement.textContent = "";
+  const apiErrorElement = formElemet.querySelector(validationConfig.errorApiClass);
+  apiErrorElement.classList.remove(validationConfig.errorClass);
+  apiErrorElement.textContent = "";
 };
 function showApiError(formElemet, errorText){
-  const ApiElement = formElemet.querySelector(validationConfig.errorApiClass);
-  ApiElement.classList.add(validationConfig.errorClass);
-  ApiElement.textContent = errorText;
+  const apiElement = formElemet.querySelector(validationConfig.errorApiClass);
+  apiElement.classList.add(validationConfig.errorClass);
+  apiElement.textContent = errorText;
 };
 
 /**Функции смены текста кнопок форм*/
@@ -123,14 +124,12 @@ function handleOpenImage(cardData) {
 };
 /**Событие открытия формы профайла*/
 function handleOpenProfilePopup(evt) {
-  setTextDefaultSaveButton(formEditProfile);
   clearValidation(formEditProfile, validationConfig); 
   fillProfileModal(profileInfoContainer, popupProfile);
   openModal(popupProfile);
 };
 /**Событие открытия формы аватара*/
 function handleOpenAvatarPopup(evt) {
-  setTextDefaultSaveButton(formAvatar);
   clearValidation(formAvatar, validationConfig); 
   fillAvatarModal(profileAvatar, popupAvatar);
   openModal(popupAvatar);
@@ -138,7 +137,6 @@ function handleOpenAvatarPopup(evt) {
 /**Событие открытия формы добавления карточки*/
 function handleOpenAddCardPopup(evt) {
   formAddCard.reset();
-  setTextDefaultSaveButton(formAddCard,);
   clearValidation(formAddCard, validationConfig); 
   openModal(popupAddCard);
 };
@@ -146,7 +144,6 @@ function handleOpenAddCardPopup(evt) {
 function handleOpenDeleteCardsConfirmPopup(cardData, cardItem) {
   currentCardData = cardData;
   currentCard = cardItem;
-  setTextDefaultOkButton(formDeleteCardsConfirm);
   hideApiError(formDeleteCardsConfirm);
   openModal(popupDeleteCardsConfirm);
 };
@@ -159,25 +156,10 @@ function handleClosePopup(evt) {
 function handleSetLike(cardData, profileData, cardItem){
   const cardLikeButton = cardItem.querySelector(".card__like-button");
   /**Если лайк установлен снимаем, иначе устанавливаем*/
-  if (cardLikeButton.classList.contains("card__like-button_is-active") ){
-    /**удаляем лайк на сервере*/
-    removeLike(cardData._id)
-    .then((result) => {
-      setLike(result, profileData, cardItem);
-    })
-    .catch((error) => {
-      console.log(error);
-    }); 
-  }else{
-    /**Добавляем лайк на сервере*/
-    newtLike(cardData._id)
-    .then((result) => {
-      setLike(result, profileData, cardItem);
-    })
-    .catch((error) => {
-      console.log(error);
-    }); 
-  };
+  const likeMethod = cardLikeButton.classList.contains("card__like-button_is-active") ? removeLike : newtLike;
+  likeMethod(cardData._id) 
+  .then((result) => setLike(result, profileData, cardItem))
+  .catch(error => console.log(error));
 };
 
 /**Отправка формы профайла*/
@@ -196,10 +178,8 @@ function handleFormProfileSubmit(evt) {
     /**Закрытие модального окна*/
     closeModal(popupProfile);
   })
-  .catch((error) => {
-    showApiError(formEditProfile, error);
-    setTextDefaultSaveButton(formEditProfile);
-  }); 
+  .catch((error) => showApiError(formEditProfile, error))
+  .finally( ( ) => setTextDefaultSaveButton(formEditProfile)); 
 };
 /**Отправка формы аватара*/
 function handleFormAvatarSubmit(evt) {
@@ -217,10 +197,8 @@ function handleFormAvatarSubmit(evt) {
     /**Закрытие модального окна*/
     closeModal(popupAvatar);
   })
-  .catch((error) => {
-    showApiError(formAvatar, error);
-    setTextDefaultSaveButton(formAvatar);
-  }); 
+  .catch((error) => showApiError(formAvatar, error))
+  .finally( ( ) => setTextDefaultSaveButton(formAvatar)); 
 };
 /**отправка формы добавления карточки*/
 function handleFormAddCardSubmit(evt) {
@@ -241,13 +219,10 @@ function handleFormAddCardSubmit(evt) {
     /**Очистка полей формы*/
       formAddCard.reset();
     /**Закрытие модального окна*/
-      clearValidation(formAddCard, validationConfig); 
       closeModal(popupAddCard);
   })
-  .catch((error) => {
-    showApiError(formAddCard, error);
-    setTextDefaultSaveButton(formAddCard);
-  }); 
+  .catch((error) => showApiError(formAddCard, error))
+  .finally( ( ) => setTextDefaultSaveButton(formAddCard)); 
 };
 /**Удаление карточки*/
 function handleFormDeleteCardSubmit(evt) {
@@ -266,10 +241,8 @@ function handleFormDeleteCardSubmit(evt) {
     /**Закрытие модального окна*/
     closeModal(popupDeleteCardsConfirm);
   })
-  .catch((error) => {
-    showApiError(formDeleteCardsConfirm, error);
-    setTextDefaultOkButton(formDeleteCardsConfirm);
-  }); 
+  .catch((error) => showApiError(formDeleteCardsConfirm, error))
+  .finally( ( ) => setTextDefaultOkButton(formDeleteCardsConfirm));
 };
 
 /**Регистрация событий открытия модульных окон*/
@@ -308,6 +281,4 @@ Promise.all(initialsAPI)
       cardsContainer.append(cardItem);
     });
   })
-  .catch((error) => {
-    console.log(error);
-  }); 
+  .catch((error) => console.log(error)); 
